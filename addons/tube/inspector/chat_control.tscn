@@ -1,0 +1,41 @@
+[gd_scene load_steps=4 format=3 uid="uid://dyfuyauko76jj"]
+
+[ext_resource type="Theme" uid="uid://bcibt73qths3g" path="res://addons/tube/inspector/theme.tres" id="1_ecj0n"]
+[ext_resource type="Script" uid="uid://ccqt34u2k2rbo" path="res://addons/tube/inspector/chat_control.gd" id="1_yvw80"]
+[ext_resource type="Texture2D" uid="uid://b4jdl1ipes5d0" path="res://addons/tube/inspector/icons/send_icon.tres" id="2_ho0s2"]
+
+[node name="ChatControl" type="MarginContainer"]
+theme = ExtResource("1_ecj0n")
+script = ExtResource("1_yvw80")
+metadata/_tab_index = 0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="TitleLabel" type="Label" parent="VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"LabelH2"
+text = "Chat"
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer"]
+layout_mode = 2
+
+[node name="LineEdit" type="LineEdit" parent="VBoxContainer/HBoxContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 40)
+layout_mode = 2
+size_flags_horizontal = 3
+placeholder_text = "Enter message"
+
+[node name="SendButton" type="Button" parent="VBoxContainer/HBoxContainer"]
+custom_minimum_size = Vector2(40, 40)
+layout_mode = 2
+tooltip_text = "Send"
+icon = ExtResource("2_ho0s2")
+icon_alignment = 1
+expand_icon = true
+
+[connection signal="visibility_changed" from="." to="." method="_on_visibility_changed"]
+[connection signal="text_submitted" from="VBoxContainer/HBoxContainer/LineEdit" to="." method="_on_line_edit_text_submitted"]
+[connection signal="pressed" from="VBoxContainer/HBoxContainer/SendButton" to="." method="_on_send_button_pressed"]

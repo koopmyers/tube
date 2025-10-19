@@ -1,0 +1,49 @@
+[gd_scene load_steps=4 format=3 uid="uid://bc0iqgoaed12"]
+
+[ext_resource type="Script" uid="uid://c8vrv4ynnxskv" path="res://addons/tube/inspector/tracker_item_control.gd" id="1_2wqop"]
+[ext_resource type="Theme" uid="uid://bcibt73qths3g" path="res://addons/tube/inspector/theme.tres" id="1_x2s1b"]
+[ext_resource type="ButtonGroup" uid="uid://fko7ise7cj31" path="res://addons/tube/inspector/tracker_peer_item_button_group.tres" id="2_daba7"]
+
+[node name="TrackerControl" type="MarginContainer"]
+custom_minimum_size = Vector2(196, 32)
+offset_right = 196.0
+offset_bottom = 38.0
+size_flags_horizontal = 3
+theme = ExtResource("1_x2s1b")
+script = ExtResource("1_2wqop")
+
+[node name="Button" type="Button" parent="."]
+layout_mode = 2
+theme_type_variation = &"ButtonFlat"
+toggle_mode = true
+button_group = ExtResource("2_daba7")
+alignment = 0
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/margin_left = 4
+theme_override_constants/margin_top = 2
+theme_override_constants/margin_right = 4
+theme_override_constants/margin_bottom = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer"]
+layout_mode = 2
+mouse_filter = 2
+
+[node name="StateIndicator" type="Panel" parent="MarginContainer/HBoxContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(24, 12)
+layout_mode = 2
+size_flags_vertical = 4
+theme_type_variation = &"PanelIndicator"
+
+[node name="NameLabel" type="Label" parent="MarginContainer/HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+theme_type_variation = &"HeaderMedium"
+text = "wss://TRACKER_URL"
+text_overrun_behavior = 1
+
+[connection signal="pressed" from="Button" to="." method="_on_button_pressed"]

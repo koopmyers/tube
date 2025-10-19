@@ -1,0 +1,229 @@
+[gd_scene load_steps=3 format=3 uid="uid://ckrifxh4o768d"]
+
+[ext_resource type="Theme" uid="uid://bcibt73qths3g" path="res://addons/tube/inspector/theme.tres" id="1_6pmfw"]
+[ext_resource type="Script" uid="uid://qcomcx6e48wn" path="res://addons/tube/inspector/peer_control.gd" id="1_kiw0h"]
+
+[node name="PeerControl" type="MarginContainer"]
+offset_right = 523.0
+offset_bottom = 161.0
+theme = ExtResource("1_6pmfw")
+script = ExtResource("1_kiw0h")
+
+[node name="PingTimer" type="Timer" parent="."]
+unique_name_in_owner = true
+one_shot = true
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="HeaderContainer" type="HBoxContainer" parent="VBoxContainer"]
+layout_mode = 2
+
+[node name="IdLabel" type="Label" parent="VBoxContainer/HeaderContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"LabelH3"
+text = "00000000000000000000"
+
+[node name="AddressLabel" type="Label" parent="VBoxContainer/HeaderContainer"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+theme_type_variation = &"LabelH3"
+text = "00000000000000000000"
+
+[node name="GridContainer" type="GridContainer" parent="VBoxContainer"]
+layout_mode = 2
+columns = 2
+
+[node name="StatesContainer" type="VBoxContainer" parent="VBoxContainer/GridContainer"]
+layout_mode = 2
+
+[node name="ConnectionStateContainer" type="HBoxContainer" parent="VBoxContainer/GridContainer/StatesContainer"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 4
+
+[node name="Label" type="Label" parent="VBoxContainer/GridContainer/StatesContainer/ConnectionStateContainer"]
+custom_minimum_size = Vector2(114, 0)
+layout_mode = 2
+theme_type_variation = &"LabelH3"
+text = "Connection"
+
+[node name="ConnectionStateIndicator" type="Panel" parent="VBoxContainer/GridContainer/StatesContainer/ConnectionStateContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(24, 12)
+layout_mode = 2
+size_flags_vertical = 4
+theme_type_variation = &"PanelIndicator"
+
+[node name="ConnectionStateLabel" type="Label" parent="VBoxContainer/GridContainer/StatesContainer/ConnectionStateContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"LabelH2"
+text = "STATE"
+
+[node name="GatheringStateContainer" type="HBoxContainer" parent="VBoxContainer/GridContainer/StatesContainer"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 4
+
+[node name="Label" type="Label" parent="VBoxContainer/GridContainer/StatesContainer/GatheringStateContainer"]
+custom_minimum_size = Vector2(114, 0)
+layout_mode = 2
+theme_type_variation = &"LabelH3"
+text = "Gathering"
+
+[node name="GatheringStateIndicator" type="Panel" parent="VBoxContainer/GridContainer/StatesContainer/GatheringStateContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(24, 12)
+layout_mode = 2
+size_flags_vertical = 4
+theme_type_variation = &"PanelIndicator"
+
+[node name="GatheringStateLabel" type="Label" parent="VBoxContainer/GridContainer/StatesContainer/GatheringStateContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"LabelH2"
+text = "STATE"
+
+[node name="SignalingStateContainer" type="HBoxContainer" parent="VBoxContainer/GridContainer/StatesContainer"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 4
+
+[node name="Label" type="Label" parent="VBoxContainer/GridContainer/StatesContainer/SignalingStateContainer"]
+custom_minimum_size = Vector2(114, 0)
+layout_mode = 2
+theme_type_variation = &"LabelH3"
+text = "Signaling"
+
+[node name="SignalingStateIndicator" type="Panel" parent="VBoxContainer/GridContainer/StatesContainer/SignalingStateContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(24, 12)
+layout_mode = 2
+size_flags_vertical = 4
+theme_type_variation = &"PanelIndicator"
+
+[node name="SignalingStateLabel" type="Label" parent="VBoxContainer/GridContainer/StatesContainer/SignalingStateContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"LabelH2"
+text = "STATE"
+
+[node name="ChannelsContainer" type="HBoxContainer" parent="VBoxContainer/GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="ChannelsLabel" type="Label" parent="VBoxContainer/GridContainer/ChannelsContainer"]
+layout_mode = 2
+size_flags_vertical = 0
+theme_type_variation = &"LabelH3"
+text = "Channels"
+
+[node name="ScrollContainer" type="ScrollContainer" parent="VBoxContainer/GridContainer/ChannelsContainer"]
+custom_minimum_size = Vector2(0, 96)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+follow_focus = true
+horizontal_scroll_mode = 0
+
+[node name="ChannelsContainer" type="VBoxContainer" parent="VBoxContainer/GridContainer/ChannelsContainer/ScrollContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="TimesContainer" type="VBoxContainer" parent="VBoxContainer/GridContainer"]
+custom_minimum_size = Vector2(250, 0)
+layout_mode = 2
+
+[node name="ConnectingTimeContainer" type="HBoxContainer" parent="VBoxContainer/GridContainer/TimesContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="VBoxContainer/GridContainer/TimesContainer/ConnectingTimeContainer"]
+layout_mode = 2
+theme_type_variation = &"LabelH3"
+text = "Connecting time"
+
+[node name="ConnectingTimeLabel" type="Label" parent="VBoxContainer/GridContainer/TimesContainer/ConnectingTimeContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"LabelH2"
+text = "00.000"
+
+[node name="SecondLabel" type="Label" parent="VBoxContainer/GridContainer/TimesContainer/ConnectingTimeContainer"]
+layout_mode = 2
+theme_type_variation = &"LabelH3"
+text = "s"
+
+[node name="UpTimeContainer" type="HBoxContainer" parent="VBoxContainer/GridContainer/TimesContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="VBoxContainer/GridContainer/TimesContainer/UpTimeContainer"]
+custom_minimum_size = Vector2(146, 0)
+layout_mode = 2
+theme_type_variation = &"LabelH3"
+text = "Up time"
+
+[node name="UpTimeLabel" type="Label" parent="VBoxContainer/GridContainer/TimesContainer/UpTimeContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"LabelH2"
+text = "0.0"
+
+[node name="SecondLabel" type="Label" parent="VBoxContainer/GridContainer/TimesContainer/UpTimeContainer"]
+layout_mode = 2
+theme_type_variation = &"LabelH3"
+text = "s"
+
+[node name="LatencyContainer" type="HBoxContainer" parent="VBoxContainer/GridContainer/TimesContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="VBoxContainer/GridContainer/TimesContainer/LatencyContainer"]
+custom_minimum_size = Vector2(146, 0)
+layout_mode = 2
+theme_type_variation = &"LabelH3"
+text = "Latency"
+
+[node name="LatencyLabel" type="Label" parent="VBoxContainer/GridContainer/TimesContainer/LatencyContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"LabelH2"
+text = "00000"
+
+[node name="SecondLabel" type="Label" parent="VBoxContainer/GridContainer/TimesContainer/LatencyContainer"]
+layout_mode = 2
+theme_type_variation = &"LabelH3"
+text = "ms"
+
+[node name="UtilsContainer" type="VBoxContainer" parent="VBoxContainer/GridContainer"]
+layout_mode = 2
+
+[node name="FakeDisconnectionContainer" type="HBoxContainer" parent="VBoxContainer/GridContainer/UtilsContainer"]
+layout_mode = 2
+
+[node name="FakeDisconnectionTimer" type="Timer" parent="VBoxContainer/GridContainer/UtilsContainer/FakeDisconnectionContainer"]
+unique_name_in_owner = true
+one_shot = true
+
+[node name="FakeDisconnectionButton" type="Button" parent="VBoxContainer/GridContainer/UtilsContainer/FakeDisconnectionContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(192, 0)
+layout_mode = 2
+size_flags_horizontal = 0
+tooltip_text = "Fake disconnectionon on code level, not on network level, for a few secondes.
+Peer will emit disconneted (unstabilized) signal to client. Will emit connected (stabilized) to client after few seconde."
+text = "FAKE DISCONNECTED"
+
+[node name="FakeDisconnectionSpinBox" type="SpinBox" parent="VBoxContainer/GridContainer/UtilsContainer/FakeDisconnectionContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+max_value = 10.0
+step = 0.001
+value = 1.0
+allow_greater = true
+suffix = "s"
+
+[connection signal="timeout" from="PingTimer" to="." method="_on_ping_timer_timeout"]
+[connection signal="pressed" from="VBoxContainer/GridContainer/UtilsContainer/FakeDisconnectionContainer/FakeDisconnectionButton" to="." method="_on_fake_disconnection_button_pressed"]

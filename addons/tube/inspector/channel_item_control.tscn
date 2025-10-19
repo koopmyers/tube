@@ -1,0 +1,46 @@
+[gd_scene load_steps=4 format=3 uid="uid://dc3ssinymllca"]
+
+[ext_resource type="Script" uid="uid://b1h5h73j26j8v" path="res://addons/tube/inspector/channel_item_control.gd" id="1_ep4vf"]
+[ext_resource type="Theme" uid="uid://bcibt73qths3g" path="res://addons/tube/inspector/theme.tres" id="1_gkg3v"]
+
+[sub_resource type="ButtonGroup" id="ButtonGroup_ep4vf"]
+resource_local_to_scene = false
+allow_unpress = true
+
+[node name="ChannelControl" type="MarginContainer"]
+anchors_preset = 10
+anchor_right = 1.0
+offset_bottom = 28.0
+grow_horizontal = 2
+theme = ExtResource("1_gkg3v")
+script = ExtResource("1_ep4vf")
+
+[node name="HBoxContainer" type="HBoxContainer" parent="."]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 4
+
+[node name="StateIndicator" type="Panel" parent="HBoxContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(24, 12)
+layout_mode = 2
+size_flags_vertical = 4
+theme_type_variation = &"PanelIndicator"
+
+[node name="NameLabel" type="Label" parent="HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+theme_type_variation = &"LabelH2"
+text = "CHANNEL"
+text_overrun_behavior = 1
+
+[node name="Button" type="Button" parent="."]
+visible = false
+layout_mode = 2
+theme_type_variation = &"FlatButton"
+toggle_mode = true
+button_group = SubResource("ButtonGroup_ep4vf")
+alignment = 0
+
+[connection signal="pressed" from="Button" to="." method="_on_button_pressed"]

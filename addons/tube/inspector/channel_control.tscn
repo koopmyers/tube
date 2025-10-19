@@ -1,0 +1,30 @@
+[gd_scene load_steps=2 format=3 uid="uid://budxt0ohhps46"]
+
+[ext_resource type="Script" uid="uid://dxd3thybq7mc2" path="res://addons/tube/inspector/channel_control.gd" id="1_t40fg"]
+
+[node name="ChannelControl" type="MarginContainer"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_type_variation = &"H1PanelContainer"
+script = ExtResource("1_t40fg")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="HeaderContainer" type="HBoxContainer" parent="VBoxContainer"]
+layout_mode = 2
+
+[node name="IdLabel" type="Label" parent="VBoxContainer/HeaderContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"HeaderMedium"
+text = "00000000000000000000"
+
+[node name="LabelLabel" type="Label" parent="VBoxContainer/HeaderContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"HeaderMedium"
+text = "00000000000000000000"

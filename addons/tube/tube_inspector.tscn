@@ -1,0 +1,301 @@
+[gd_scene load_steps=11 format=3 uid="uid://dujkendqt6ls1"]
+
+[ext_resource type="Theme" uid="uid://bcibt73qths3g" path="res://addons/tube/inspector/theme.tres" id="1_xsva5"]
+[ext_resource type="Script" uid="uid://c6txv1voyurrl" path="res://addons/tube/inspector/tube_inspector.gd" id="2_6ede3"]
+[ext_resource type="ButtonGroup" uid="uid://fko7ise7cj31" path="res://addons/tube/inspector/tracker_peer_item_button_group.tres" id="3_v58fy"]
+[ext_resource type="PackedScene" uid="uid://c3p410vwblsb3" path="res://addons/tube/inspector/client_control.tscn" id="4_6ede3"]
+[ext_resource type="PackedScene" uid="uid://dyfuyauko76jj" path="res://addons/tube/inspector/chat_control.tscn" id="4_geh7p"]
+[ext_resource type="PackedScene" uid="uid://ja0u2vuivo8b" path="res://addons/tube/inspector/tracker_control.tscn" id="5_2rkog"]
+[ext_resource type="PackedScene" uid="uid://5f8u55hvqq4w" path="res://addons/tube/inspector/local_signaling_control.tscn" id="5_v58fy"]
+[ext_resource type="PackedScene" uid="uid://ckrifxh4o768d" path="res://addons/tube/inspector/peer_control.tscn" id="6_xyrfc"]
+[ext_resource type="PackedScene" uid="uid://btfc8o5xfs14w" path="res://addons/tube/inspector/messages_container.tscn" id="7_6bfdn"]
+[ext_resource type="PackedScene" uid="uid://bi8vgsoslhvrb" path="res://addons/tube/inspector/message_control.tscn" id="8_pnoa1"]
+
+[node name="TubeInspector" type="PanelContainer"]
+offset_right = 524.0
+offset_bottom = 565.0
+theme = ExtResource("1_xsva5")
+script = ExtResource("2_6ede3")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="HeaderContainer" type="MarginContainer" parent="VBoxContainer"]
+custom_minimum_size = Vector2(0, 48)
+layout_mode = 2
+
+[node name="PanelContainer" type="PanelContainer" parent="VBoxContainer/HeaderContainer"]
+layout_mode = 2
+theme_type_variation = &"PanelH1Container"
+
+[node name="HeaderButton" type="Button" parent="VBoxContainer/HeaderContainer"]
+layout_mode = 2
+theme_type_variation = &"ButtonFlat"
+toggle_mode = true
+button_pressed = true
+button_group = ExtResource("3_v58fy")
+
+[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/HeaderContainer"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/margin_left = 16
+theme_override_constants/margin_top = 9
+theme_override_constants/margin_right = 16
+theme_override_constants/margin_bottom = 9
+
+[node name="VContainer" type="VBoxContainer" parent="VBoxContainer/HeaderContainer/MarginContainer"]
+layout_mode = 2
+size_flags_vertical = 4
+mouse_filter = 2
+
+[node name="SessionContainer" type="HBoxContainer" parent="VBoxContainer/HeaderContainer/MarginContainer/VContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+mouse_filter = 2
+
+[node name="Label" type="Label" parent="VBoxContainer/HeaderContainer/MarginContainer/VContainer/SessionContainer"]
+custom_minimum_size = Vector2(96, 0)
+layout_mode = 2
+theme_type_variation = &"LabelH3"
+text = "Session"
+
+[node name="SessionLineEdit" type="LineEdit" parent="VBoxContainer/HeaderContainer/MarginContainer/VContainer/SessionContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(128, 40)
+layout_mode = 2
+size_flags_horizontal = 3
+text = "ABCDE"
+placeholder_text = "Enter session id"
+alignment = 1
+
+[node name="JoinButton" type="Button" parent="VBoxContainer/HeaderContainer/MarginContainer/VContainer/SessionContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(96, 40)
+layout_mode = 2
+theme_type_variation = &"FlatButton"
+text = "JOIN"
+
+[node name="CreateButton" type="Button" parent="VBoxContainer/HeaderContainer/MarginContainer/VContainer/SessionContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(96, 40)
+layout_mode = 2
+theme_type_variation = &"FlatButton"
+text = "CREATE"
+
+[node name="CloseButton" type="Button" parent="VBoxContainer/HeaderContainer/MarginContainer/VContainer/SessionContainer"]
+unique_name_in_owner = true
+visible = false
+custom_minimum_size = Vector2(96, 0)
+layout_mode = 2
+theme_type_variation = &"FlatButton"
+text = "QUIT"
+
+[node name="PeerContainer" type="HBoxContainer" parent="VBoxContainer/HeaderContainer/MarginContainer/VContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+mouse_filter = 2
+
+[node name="Label" type="Label" parent="VBoxContainer/HeaderContainer/MarginContainer/VContainer/PeerContainer"]
+custom_minimum_size = Vector2(96, 0)
+layout_mode = 2
+theme_type_variation = &"LabelH3"
+text = "Peer"
+
+[node name="PeerLabel" type="Label" parent="VBoxContainer/HeaderContainer/MarginContainer/VContainer/PeerContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(208, 0)
+layout_mode = 2
+size_flags_vertical = 1
+theme_type_variation = &"HeaderLarge"
+text = "0000000000000000000"
+
+[node name="SessionIndicator" type="Panel" parent="VBoxContainer/HeaderContainer/MarginContainer/VContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(4, 4)
+layout_mode = 2
+mouse_filter = 2
+theme_type_variation = &"PanelIndicator"
+
+[node name="VSplitContainer" type="VSplitContainer" parent="VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="SocketsContainer" type="HSplitContainer" parent="VBoxContainer/VSplitContainer"]
+custom_minimum_size = Vector2(0, 160)
+layout_mode = 2
+size_flags_vertical = 3
+size_flags_stretch_ratio = 0.35
+
+[node name="TrackersPanelContainer" type="PanelContainer" parent="VBoxContainer/VSplitContainer/SocketsContainer"]
+custom_minimum_size = Vector2(0, 128)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_type_variation = &"PanelH1Container"
+
+[node name="TrackersPanel" type="VBoxContainer" parent="VBoxContainer/VSplitContainer/SocketsContainer/TrackersPanelContainer"]
+layout_mode = 2
+
+[node name="LocalSignalingContainer" type="MarginContainer" parent="VBoxContainer/VSplitContainer/SocketsContainer/TrackersPanelContainer/TrackersPanel"]
+layout_mode = 2
+
+[node name="LocalSignalingButton" type="Button" parent="VBoxContainer/VSplitContainer/SocketsContainer/TrackersPanelContainer/TrackersPanel/LocalSignalingContainer"]
+custom_minimum_size = Vector2(100, 30)
+layout_mode = 2
+theme_type_variation = &"ButtonFlat"
+toggle_mode = true
+button_group = ExtResource("3_v58fy")
+
+[node name="Container" type="HBoxContainer" parent="VBoxContainer/VSplitContainer/SocketsContainer/TrackersPanelContainer/TrackersPanel/LocalSignalingContainer"]
+layout_mode = 2
+mouse_filter = 2
+
+[node name="LocalSignalingIndicator" type="Panel" parent="VBoxContainer/VSplitContainer/SocketsContainer/TrackersPanelContainer/TrackersPanel/LocalSignalingContainer/Container"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(16, 8)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+mouse_filter = 2
+theme_type_variation = &"PanelIndicator"
+
+[node name="Label" type="Label" parent="VBoxContainer/VSplitContainer/SocketsContainer/TrackersPanelContainer/TrackersPanel/LocalSignalingContainer/Container"]
+layout_mode = 2
+theme_type_variation = &"LabelH3"
+text = "Local signaling"
+
+[node name="TrackerHeader" type="HBoxContainer" parent="VBoxContainer/VSplitContainer/SocketsContainer/TrackersPanelContainer/TrackersPanel"]
+layout_mode = 2
+
+[node name="TrackersIndicator" type="Panel" parent="VBoxContainer/VSplitContainer/SocketsContainer/TrackersPanelContainer/TrackersPanel/TrackerHeader"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(16, 8)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+theme_type_variation = &"PanelIndicator"
+
+[node name="Label" type="Label" parent="VBoxContainer/VSplitContainer/SocketsContainer/TrackersPanelContainer/TrackersPanel/TrackerHeader"]
+layout_mode = 2
+theme_type_variation = &"LabelH3"
+text = "Online signaling - trackers"
+
+[node name="TrackersContainer" type="VBoxContainer" parent="VBoxContainer/VSplitContainer/SocketsContainer/TrackersPanelContainer/TrackersPanel"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="PeersPanelContainer" type="PanelContainer" parent="VBoxContainer/VSplitContainer/SocketsContainer"]
+custom_minimum_size = Vector2(128, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_type_variation = &"PanelH1Container"
+
+[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/VSplitContainer/SocketsContainer/PeersPanelContainer"]
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/VSplitContainer/SocketsContainer/PeersPanelContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="VBoxContainer/VSplitContainer/SocketsContainer/PeersPanelContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 2
+theme_type_variation = &"LabelH3"
+text = "Peers"
+
+[node name="RefuseNewButton" type="Button" parent="VBoxContainer/VSplitContainer/SocketsContainer/PeersPanelContainer/VBoxContainer/HBoxContainer"]
+unique_name_in_owner = true
+visible = false
+custom_minimum_size = Vector2(144, 0)
+layout_mode = 2
+theme_type_variation = &"FlatButton"
+toggle_mode = true
+text = "REFUSE NEW"
+
+[node name="ChatButton" type="Button" parent="VBoxContainer/VSplitContainer/SocketsContainer/PeersPanelContainer/VBoxContainer/HBoxContainer"]
+custom_minimum_size = Vector2(100, 30)
+layout_mode = 2
+theme_type_variation = &"ButtonFlat"
+toggle_mode = true
+button_group = ExtResource("3_v58fy")
+text = "Chat"
+
+[node name="ScrollContainer" type="ScrollContainer" parent="VBoxContainer/VSplitContainer/SocketsContainer/PeersPanelContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+follow_focus = true
+horizontal_scroll_mode = 0
+
+[node name="PeersContainer" type="VBoxContainer" parent="VBoxContainer/VSplitContainer/SocketsContainer/PeersPanelContainer/VBoxContainer/ScrollContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="VSplitContainer" type="VSplitContainer" parent="VBoxContainer/VSplitContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="PanelContainer" type="PanelContainer" parent="VBoxContainer/VSplitContainer/VSplitContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_type_variation = &"PanelH1Container"
+
+[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/VSplitContainer/VSplitContainer/PanelContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="TabContainer" type="TabContainer" parent="VBoxContainer/VSplitContainer/VSplitContainer/PanelContainer/VBoxContainer"]
+layout_mode = 2
+current_tab = 0
+tabs_visible = false
+
+[node name="ClientControl" parent="VBoxContainer/VSplitContainer/VSplitContainer/PanelContainer/VBoxContainer/TabContainer" instance=ExtResource("4_6ede3")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="LocalSignalingControl" parent="VBoxContainer/VSplitContainer/VSplitContainer/PanelContainer/VBoxContainer/TabContainer" node_paths=PackedStringArray("messages_container") instance=ExtResource("5_v58fy")]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+messages_container = NodePath("../../MessagesContainer")
+metadata/_tab_index = 1
+
+[node name="TrackerControl" parent="VBoxContainer/VSplitContainer/VSplitContainer/PanelContainer/VBoxContainer/TabContainer" node_paths=PackedStringArray("messages_container") instance=ExtResource("5_2rkog")]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+messages_container = NodePath("../../MessagesContainer")
+metadata/_tab_index = 2
+
+[node name="PeerControl" parent="VBoxContainer/VSplitContainer/VSplitContainer/PanelContainer/VBoxContainer/TabContainer" node_paths=PackedStringArray("messages_container") instance=ExtResource("6_xyrfc")]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+messages_container = NodePath("../../MessagesContainer")
+metadata/_tab_index = 3
+
+[node name="ChatControl" parent="VBoxContainer/VSplitContainer/VSplitContainer/PanelContainer/VBoxContainer/TabContainer" node_paths=PackedStringArray("messages_container") instance=ExtResource("4_geh7p")]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+messages_container = NodePath("../../MessagesContainer")
+metadata/_tab_index = 4
+
+[node name="MessagesContainer" parent="VBoxContainer/VSplitContainer/VSplitContainer/PanelContainer/VBoxContainer" node_paths=PackedStringArray("message_control") instance=ExtResource("7_6bfdn")]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 3
+message_control = NodePath("../../../MessageControl")
+
+[node name="MessageControl" parent="VBoxContainer/VSplitContainer/VSplitContainer" instance=ExtResource("8_pnoa1")]
+custom_minimum_size = Vector2(0, 96)
+layout_mode = 2
+size_flags_vertical = 3
+size_flags_stretch_ratio = 0.7
+
+[connection signal="pressed" from="VBoxContainer/HeaderContainer/HeaderButton" to="." method="_on_header_button_pressed"]
+[connection signal="pressed" from="VBoxContainer/HeaderContainer/MarginContainer/VContainer/SessionContainer/JoinButton" to="." method="_on_join_button_pressed"]
+[connection signal="pressed" from="VBoxContainer/HeaderContainer/MarginContainer/VContainer/SessionContainer/CreateButton" to="." method="_on_create_button_pressed"]
+[connection signal="pressed" from="VBoxContainer/HeaderContainer/MarginContainer/VContainer/SessionContainer/CloseButton" to="." method="_on_close_button_pressed"]
+[connection signal="pressed" from="VBoxContainer/VSplitContainer/SocketsContainer/TrackersPanelContainer/TrackersPanel/LocalSignalingContainer/LocalSignalingButton" to="VBoxContainer/VSplitContainer/VSplitContainer/PanelContainer/VBoxContainer/TabContainer/LocalSignalingControl" method="show"]
+[connection signal="toggled" from="VBoxContainer/VSplitContainer/SocketsContainer/PeersPanelContainer/VBoxContainer/HBoxContainer/RefuseNewButton" to="." method="_on_refuse_new_button_toggled"]
+[connection signal="pressed" from="VBoxContainer/VSplitContainer/SocketsContainer/PeersPanelContainer/VBoxContainer/HBoxContainer/ChatButton" to="VBoxContainer/VSplitContainer/VSplitContainer/PanelContainer/VBoxContainer/TabContainer/ChatControl" method="show"]

@@ -1,0 +1,14 @@
+#MacOS
+.DS_Store
+
+# VSCode
+.vscode/
+
+# webRTC gdextension
+/lib/
+webrtc.gdextension
+webrtc.gdextension.uid
+
+# Godot 4+ specific ignores
+.godot/
+/android/
