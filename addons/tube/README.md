@@ -156,10 +156,7 @@ func transfer_some_input():
 	# Process the input and affect game logic.
 ```
 
-<!---
-To see more about how to configure and use it, see the [demo project](link)
--->
-
+To know more about how to configure and use it, you can look into the [demo project](https://github.com/koopmyers/pixelary)
 
 ### Inspector
 
