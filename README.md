@@ -4,14 +4,14 @@ A lightweight Godot addon that helps create simple multiplayer sessions.
 
 One player creates a session and shares the session ID with others through a external channel (WhatsApp, Discord, etc.). The other players can then join and play together. That’s it, no server deployment needed.
 
-## Use case and limitation
+## Use case & limitation
 
-Tube works on any platform that supports WebRTC over the internet, see [Requirements](###Requirements).
+Tube works on any platform that supports WebRTC over the internet, see [Requirements](#requirements).
 It also runs on non-web platforms (Windows, macOS, Linux, Android, iOS) over a local network, without needing an internet connection.
 
-However, the benefit of not having to deploy a server comes with a trade-off: in some cases, two peers may fail to connect. To better understand why this happens, see [How it works](##How%20it%20works).
+However, the benefit of not having to deploy a server comes with a trade-off: in some cases, two peers may fail to connect. To better understand why this happens, see [How it works](#how-it%-works).
 
-Because no server is deployed by default, Tube may not be suitable for projects that require high stability or support for a large user base. If stability is critical, you can deploy your own servers to ensure reliable connectivity [Using your own servers](##Using%20your%20own%20servers). 
+Because no server is deployed by default, Tube may not be suitable for projects that require high stability or support for a large user base. If stability is critical, you can deploy your own servers to ensure reliable connectivity [Using your own servers](#using-your-own-servers). 
 As it is, Tube is a great option for:
 - Rapid prototyping of peer-to-peer multiplayer
 - Testing mutliplayer games
@@ -139,7 +139,7 @@ You can customize this behavior by setting the multiplayer_root_node property on
 Once peers are connected, use [Godot Hight Level](https://docs.godotengine.org/en/stable/tutorials/networking/high_level_multiplayer.html) to implement your game logic. 
 You can make use of tools such as:
 - Godot RPC
-- [MultiplayerSpawner](https://docs.godotengine.org/en/stable/classes/
+- [MultiplayerSpawner](https://docs.godotengine.org/en/stable/classes/)
 - [MultiplayerSynchronizer](https://docs.godotengine.org/en/stable/classes/class_multiplayersynchronizer.html)
 
 For exemple:
@@ -194,13 +194,13 @@ Because the Web platform cannot open listening ports, local signaling is unavail
 
 ### Online signaling
 
-For Signaling servers, **Tube** use WebTorrent tracker servers as signaling servers. Several public trackers are available, such as those listed in [Configuration & Utilisation](#Configuration%20&%20Utilisation).
+For Signaling servers, **Tube** use WebTorrent tracker servers as signaling servers. Several public trackers are available, such as those listed in [Configuration & Utilisation](#configuration--utilisation).
 
 It is recommended to use multiple trackers to improve connection reliability, as public trackers can occasionally be unstable.
 
 To learn more about BitTorrent trackers and WebTorrent, see the [WebTorrent github](https://github.com/webtorrent/webtorrent) and the [Wikipedia BitTorrent Tracker page](https://en.wikipedia.org/wiki/BitTorrent_tracker).
 
-If you need more stable connections for your game, you can deploy your own tracker servers, see [Using your own servers](##Using%20your%20own%20servers).
+If you need more stable connections for your game, you can deploy your own tracker servers, see [Using your own servers](#using-your-own-servers).
 
 Many public STUN servers are available, such as those provided by Google.
 You can find an updated list here: [Public STUN list](https://gist.github.com/mondain/b0ec1cf5f60ae726202e)
@@ -208,7 +208,7 @@ You can find an updated list here: [Public STUN list](https://gist.github.com/mo
 Currently, there are no reliable public TURN servers.
 Without a TURN server, there is no fallback mechanism when peers cannot establish a direct connection, for example, if both peers are behind a *symmetric NAT*. To mitigate this, Tube attempts to open ports automatically using *UPnP port mapping*. However, this feature is not supported on the Web platform.
 
-For maximum reliability, you can deploy your own TURN server and add it to your `TubeContext` configuration see [Using your own servers](##Using%20your%20own%20servers).
+For maximum reliability, you can deploy your own TURN server and add it to your `TubeContext` configuration see [Using your own servers](#using-your-own-servers).
 
 ## Using your own servers
 
