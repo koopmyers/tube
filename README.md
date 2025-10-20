@@ -9,7 +9,7 @@ One player creates a session and shares the session ID with others through a ext
 Tube works on any platform that supports WebRTC over the internet, see [Requirements](#requirements).
 It also runs on non-web platforms (Windows, macOS, Linux, Android, iOS) over a local network, without needing an internet connection.
 
-However, the benefit of not having to deploy a server comes with a trade-off: in some cases, two peers may fail to connect. To better understand why this happens, see [How it works](#how-it%-works).
+However, the benefit of not having to deploy a server comes with a trade-off: in some cases, two peers may fail to connect. To better understand why this happens, see [How it works](#how-it-works).
 
 Because no server is deployed by default, Tube may not be suitable for projects that require high stability or support for a large user base. If stability is critical, you can deploy your own servers to ensure reliable connectivity [Using your own servers](#using-your-own-servers). 
 As it is, Tube is a great option for:
