@@ -40,9 +40,7 @@ To use this add-on effectively, it is essential to understand [Godot Hight Level
 ### Installation
 
 To install copy the *addons/simple_multiplayer_session* folder into *addons* Godot project's *addons* folder.
-<!---
-Or download it directly from the [Godot asset library](link)
--->
+Or download it directly from the [Godot asset library](https://godotengine.org/asset-library/asset/4419)
 
 Verify that the addon is activated in your godot project in `Project Settings -> Plugins`.
 
@@ -101,7 +99,7 @@ On only one instance of the game call `create_session()`, for example:
 
 
 func _on_button_pressed(): # User press create session button
-	tube_client.create_session()
+    tube_client.create_session()
     label.text = tube_client.session_id
 ```
 This player becomes the server (`is_server = true`) and have acces to the created session ID in the `session_id` property.
@@ -145,15 +143,15 @@ You can make use of tools such as:
 For exemple:
 ```GDScript
 func _on_some_input(): # Connected to some input.
-	transfer_some_input.rpc_id(1) # Send the input only to the server.
+    transfer_some_input.rpc_id(1) # Send the input only to the server.
 
 
 # Call local is required if the server is also a player.
 @rpc("any_peer", "call_local", "reliable")
 func transfer_some_input():
-	# The server knows who sent the input.
-	var sender_id = multiplayer.get_remote_sender_id()
-	# Process the input and affect game logic.
+    # The server knows who sent the input.
+    var sender_id = multiplayer.get_remote_sender_id()
+    # Process the input and affect game logic.
 ```
 
 To know more about how to configure and use it, you can look into the [demo project](https://github.com/koopmyers/pixelary)

@@ -40,9 +40,7 @@ To use this add-on effectively, it is essential to understand [Godot Hight Level
 ### Installation
 
 To install copy the *addons/simple_multiplayer_session* folder into *addons* Godot project's *addons* folder.
-<!---
-Or download it directly from the [Godot asset library](link)
--->
+Or download it directly from the [Godot asset library](https://godotengine.org/asset-library/asset/4419)
 
 Verify that the addon is activated in your godot project in `Project Settings -> Plugins`.
 
