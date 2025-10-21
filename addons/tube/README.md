@@ -2,7 +2,7 @@
 
 A lightweight Godot addon that helps create simple multiplayer sessions.
 
-One player creates a session and shares the session ID with others through a external channel (WhatsApp, Discord, etc.). The other players can then join and play together. That’s it, no server deployment needed.
+One player creates a session and shares the session ID with others through an external channel (WhatsApp, Discord, etc.). The other players can then join and play together. That’s it, no server deployment needed.
 
 ## Use case & limitation
 
@@ -39,7 +39,7 @@ To use this add-on effectively, it is essential to understand [Godot High-level 
 
 ### Installation
 
-To install copy the *addons/simple_multiplayer_session* folder into *addons* Godot project's *addons* folder.
+To install copy the *addons/tube* folder into *addons* Godot project's *addons* folder.
 Or download it directly from the [Godot asset library](https://godotengine.org/asset-library/asset/4419)
 
 Verify that the addon is activated in your godot project in `Project Settings -> Plugins`.
@@ -158,7 +158,7 @@ To know more about how to configure and use it, you can look into the [demo proj
 
 ### Inspector
 
-**Tube**  a handy tool called `TubeInspector` to help you debug and see what’s happening under the hood.
+**Tube** has a handy tool called `TubeInspector` to help you debug and see what’s happening under the hood.
 To use it, simply include the scene located at: `/addons/tube/tube_inspector.tscn` in your scene and assign  your TubeClient to it.
 > [!NOTE]
 > Some features, such as latency display and chat, are only available if the TubeInspector is part of the MultiplayerAPI scene tree.
@@ -182,7 +182,7 @@ For more details on WebRTC, visit the [Official WebRTC web site](https://webrtc.
 
 On a local network, the server peer listens on determined port. When joining, other peers broadcast their signaling data across the network at destination of the server. Once signaling is complete, peers automatically switch to a WebRTC connection.
 
-STUN and TURN servers are not needed in required this mode.
+STUN and TURN servers are not needed in this mode.
 
 Because the Web platform cannot open listening ports, local signaling is unavailable on Web builds.
 
@@ -208,11 +208,11 @@ For maximum reliability, you can deploy your own TURN server and add it to your 
 ## Using your own servers
 
 ### WebTorrent tracker
-ou can deploy your own WebTorrent tracker using the [Official Webtorrent Tracker](https://github.com/webtorrent/bittorrent-tracker) or the [OpenWebTorrent Tracker](https://github.com/OpenWebTorrent/openwebtorrent-tracker).
+You can deploy your own WebTorrent tracker using the [Official Webtorrent Tracker](https://github.com/webtorrent/bittorrent-tracker) or the [OpenWebTorrent Tracker](https://github.com/OpenWebTorrent/openwebtorrent-tracker).
 
 Make sure to configure it with WebSocket support, availbale on Internet and set its URL in your TubeContext.
 
-It is strongly recommended to use secure WebSockets (WSS/TLS) for to ensure reliable and encrypted communication and some brownser will block non secure communication.
+It is strongly recommended to use secure WebSockets (WSS/TLS) for to ensure reliable and encrypted communication and some browser will block non secure communication.
 
 ### Turn server
 To improve connection reliability, you can host your own TURN server using [coturn](https://github.com/coturn/coturn) or [eturnal](https://github.com/processone/eturnal). They can also be used as STUN servers.
