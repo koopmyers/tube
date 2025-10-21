@@ -2,7 +2,7 @@
 
 A lightweight Godot addon that helps create simple multiplayer sessions.
 
-One player creates a session and shares the session ID with others through a external channel (WhatsApp, Discord, etc.). The other players can then join and play together. That’s it, no server deployment needed.
+One player creates a session and shares the session ID with others through an external channel (WhatsApp, Discord, etc.). The other players can then join and play together. That’s it, no server deployment needed.
 
 ## Use case & limitation
 
@@ -15,7 +15,7 @@ Because no server is deployed by default, Tube may not be suitable for projects 
 As it is, Tube is a great option for:
 - Rapid prototyping of peer-to-peer multiplayer
 - Testing mutliplayer games
-- Learning Godot Hight Level Multiplayer
+- Learning Godot Hight-Level Multiplayer
 - Local multiplayer game
 - Game demo
 - Simple indie game
@@ -35,7 +35,7 @@ Tube was developed and tested with Godot 4.5, and it may also work with other Go
 
 When exporting to Android, make sure to enable the `INTERNET` permission in the Android export preset before exporting the project or using one-click deploy. Otherwise, network communication of any kind will be blocked by Android.
 
-To use this add-on effectively, it is essential to understand [Godot Hight Level Multiplayer](https://docs.godotengine.org/en/stable/tutorials/networking/high_level_multiplayer.html)
+To use this add-on effectively, it is essential to understand [Godot Hight-Level Multiplayer](https://docs.godotengine.org/en/stable/tutorials/networking/high_level_multiplayer.html)
 
 ### Installation
 
@@ -134,7 +134,7 @@ The server can:
 By default, `TubeClient` automatically configures Godot’s `MultiplayerAPI` and `MultiplayerPeer` on the SceneTree root node.
 You can customize this behavior by setting the multiplayer_root_node property on TubeClient (see [SceneTree.set_multiplayer](https://docs.godotengine.org/en/stable/classes/class_scenetree.html#class-scenetree-method-set-multiplayer) for more information).
 
-Once peers are connected, use [Godot Hight Level](https://docs.godotengine.org/en/stable/tutorials/networking/high_level_multiplayer.html) to implement your game logic. 
+Once peers are connected, use [Godot Hight-Level](https://docs.godotengine.org/en/stable/tutorials/networking/high_level_multiplayer.html) to implement your game logic. 
 You can make use of tools such as:
 - Godot RPC
 - [MultiplayerSpawner](https://docs.godotengine.org/en/stable/classes/)
@@ -158,7 +158,7 @@ To know more about how to configure and use it, you can look into the [demo proj
 
 ### Inspector
 
-**Tube**  a handy tool called `TubeInspector` to help you debug and see what’s happening under the hood.
+**Tube** has a handy tool called `TubeInspector` to help you debug and see what’s happening under the hood.
 To use it, simply include the scene located at: `/addons/tube/tube_inspector.tscn` in your scene and assign  your TubeClient to it.
 > [!NOTE]
 > Some features, such as latency display and chat, are only available if the TubeInspector is part of the MultiplayerAPI scene tree.
@@ -167,7 +167,7 @@ To use it, simply include the scene located at: `/addons/tube/tube_inspector.tsc
 
 **Tube** establishes a server–client architecture between peers.
 One peer acts as the server, while all other peers connect to it as clients.
-The server is responsible for relaying Godot’s RPC (see [Godot Hight Level](https://docs.godotengine.org/en/stable/tutorials/networking/high_level_multiplayer.html)) between peers.
+The server is responsible for relaying Godot’s RPC (see [Godot Hight-Level](https://docs.godotengine.org/en/stable/tutorials/networking/high_level_multiplayer.html)) between peers.
 
 To connect peers to the server, Tube uses WebRTC (Web Real-Time Communication), an open-source technology that enables secure, real-time peer-to-peer data transmission.
 Establishing a WebRTC connection requires an initial signaling phase, which depends on three external components:
@@ -182,7 +182,7 @@ For more details on WebRTC, visit the [Official WebRTC web site](https://webrtc.
 
 On a local network, the server peer listens on determined port. When joining, other peers broadcast their signaling data across the network at destination of the server. Once signaling is complete, peers automatically switch to a WebRTC connection.
 
-STUN and TURN servers are not needed in required this mode.
+STUN and TURN servers are not needed in this mode.
 
 Because the Web platform cannot open listening ports, local signaling is unavailable on Web builds.
 
@@ -208,11 +208,11 @@ For maximum reliability, you can deploy your own TURN server and add it to your 
 ## Using your own servers
 
 ### WebTorrent tracker
-ou can deploy your own WebTorrent tracker using the [Official Webtorrent Tracker](https://github.com/webtorrent/bittorrent-tracker) or the [OpenWebTorrent Tracker](https://github.com/OpenWebTorrent/openwebtorrent-tracker).
+You can deploy your own WebTorrent tracker using the [Official Webtorrent Tracker](https://github.com/webtorrent/bittorrent-tracker) or the [OpenWebTorrent Tracker](https://github.com/OpenWebTorrent/openwebtorrent-tracker).
 
 Make sure to configure it with WebSocket support, availbale on Internet and set its URL in your TubeContext.
 
-It is strongly recommended to use secure WebSockets (WSS/TLS) for to ensure reliable and encrypted communication and some brownser will block non secure communication.
+It is strongly recommended to use secure WebSockets (WSS/TLS) for to ensure reliable and encrypted communication and some browser will block non secure communication.
 
 ### Turn server
 To improve connection reliability, you can host your own TURN server using [coturn](https://github.com/coturn/coturn) or [eturnal](https://github.com/processone/eturnal). They can also be used as STUN servers.
