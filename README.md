@@ -102,7 +102,7 @@ func _on_button_pressed(): # User press create session button
     tube_client.create_session()
     label.text = tube_client.session_id
 ```
-This player becomes the server (`is_server = true`) and have acces to the created session ID in the `session_id` property.
+This player becomes the server (`is_server = true`) and have access to the created session ID in the `session_id` property.
 
 The server player should share this session ID with others through an external channel (e.g. Discord).
 Other players can join by calling `join_session(session_id)`, for example:
