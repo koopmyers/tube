@@ -39,10 +39,9 @@ enum Type {INFO, ERROR, WARNING, SENT, RECEIVED, SUCCESS}
 var data: Variant:
 	set(x):
 		data = x
-		time = Time.get_time_string_from_system()
-		
 		if is_instance_valid(data_label):
 			data_label.text = str(data)
+
 
 var from_address: String:
 	set(x):
@@ -96,9 +95,14 @@ var button_group: ButtonGroup
 @onready var data_label: Label = %DataLabel
 
 
+func _init() -> void:
+	time = Time.get_time_string_from_system()
+
+
 func _ready() -> void:
 	type = type
 	data = data
+	time = time
 	from_id = from_id
 	button.button_group = button_group
 
