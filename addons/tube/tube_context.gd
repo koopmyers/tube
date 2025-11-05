@@ -11,7 +11,7 @@ const _APP_ID_CHARACTER_SET := "!#$%&()*+,-./ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghi
 )
 
 ## Application identifier for this multiplayer context.
-## Must be exactly 15 characters long.
+## Must be exactly 15 ASCII characters long.
 @export var app_id: String
 
 ## Character set used to generate session IDs.

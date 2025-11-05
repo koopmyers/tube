@@ -53,7 +53,7 @@ Verify that the addon is activated in your godot project in `Project Settings ->
 #### 1. Creating a `TubeContext`
 
 First, create a new `TubeContext` for your project `in Godot FileSystem inspector -> Create New -> TubeContext`. And do the following :
-1. Enter a `App ID` in your `TubeContext`. App ID must be exactly 15 characters. You can generate one automatically by clicking `Generate App ID`. App ID must be the same on all instance of your game.
+1. Enter a `App ID` in your `TubeContext`. App ID must be exactly 15 ASCII characters. You can generate one automatically by clicking `Generate App ID`. App ID must be the same on all instance of your game.
 
 > [!TIP]
 > If your game is only intended for local play, you can skip the following steps 2 and 3.
