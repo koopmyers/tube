@@ -69,6 +69,12 @@ const SIGNALING_COLORS := {
 				client._peer_initiated.disconnect(
 					_on_client_peer_initiated
 				)
+				client._upnp.port_mapped.disconnect(
+					_on_client_port_mapped
+				)
+				client._upnp.warning_raised.disconnect(
+					_on_client_upnp_warning_raised
+				)
 			
 			
 			if null != x:
@@ -112,9 +118,22 @@ const SIGNALING_COLORS := {
 				x._peer_initiated.connect(
 					_on_client_peer_initiated
 				)
+				x._upnp.port_mapped.connect(
+					_on_client_port_mapped
+				)
+				x._upnp.warning_raised.connect(
+					_on_client_upnp_warning_raised
+				)
+				
 				
 		
 		client = x
+		if is_instance_valid(client_control):
+			client_control.client = client
+	
+		if is_instance_valid(peer_control):
+			peer_control.client = client
+		
 		update()
 
 ## Maximum of messages available, the oldest message will be removed when a new message is pushed. It is to prevent memory leak.
@@ -156,6 +175,8 @@ func _ready() -> void:
 	message_item_button_group.allow_unpress = true
 	switch_to_idle_config()
 	messages_container.display_messages([], self)
+	
+	client = client
 	update()
 
 
@@ -220,13 +241,6 @@ func update():
 		trackers_indicator.modulate = SIGNALING_COLORS[client._is_online_signaling()]
 		if TubeClient.State.IDLE == client.state:
 			trackers_indicator.modulate = STATE_COLORS[client.state]
-	
-	
-	if is_instance_valid(client_control):
-		client_control.client = client
-	
-	if is_instance_valid(peer_control):
-		peer_control.client = client
 	
 	if is_instance_valid(peer_label):
 		peer_label.text = EditorTubePeerItemControl.get_peer_string(client.peer_id)
@@ -435,3 +449,14 @@ func _on_client_peer_initiated(peer: TubePeer):
 		"peer_id": peer.id,
 	}))
 	update.call_deferred()
+
+
+func _on_client_port_mapped(public_port: int, local_port: int):
+	add_message_item_control("Port {port} mapped to internal port {internal_port}".format({
+		"port": public_port,
+		"internal_port": local_port
+	}))
+
+
+func _on_client_upnp_warning_raised(message: String):
+	add_message_item_control("Upnp: " + message).warning()

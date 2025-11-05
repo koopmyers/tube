@@ -15,7 +15,7 @@ signal connection_state_changed
 #signal ice_candidate_created # local
 signal remote_description_setted
 signal ice_candidate_added(ice_candidate: Dictionary) # remote
-signal port_mapped(port: int)
+signal port_mapped(public_port: int, local_port: int)
 
 signal channel_initiated(channel: WebRTCDataChannel)
 signal channel_state_changed(channel: WebRTCDataChannel)
@@ -32,7 +32,7 @@ class WebRTCSdp extends RefCounted:
 	var port: int
 	var type: String
 	var related_address: String
-	var related_port: String
+	var related_port: int
 	var tcp_type: String
 	
 	
@@ -98,7 +98,9 @@ var remote_session_description := {}
 var ice_candidates: Array[Dictionary] = []
 var has_joined_session := false # set by client
 
-var port_mapping_threads: Array[Thread] = []
+var pending_public_ports: Array[int] = []
+var local_ports: Array[int] = []
+var mapped_ports: Dictionary[int, int] = {} # public to local
 
 var channel_states: Dictionary[WebRTCDataChannel, WebRTCDataChannel.ChannelState] = {}
 
@@ -138,7 +140,7 @@ func _initialize(p_config: Dictionary) -> Error:
 func _get_connection_state() -> WebRTCPeerConnection.ConnectionState:
 	var state := connection.get_connection_state()
 	if state == WebRTCPeerConnection.STATE_DISCONNECTED:
-		# For WebRTC disconnected can be temporary and will automaticaly reconnect quickly. But for godot, disconnected putting a end to the connection. We don't want that so we tell godot that it is still connected. If does not reconnect, state will be FAILED and handle as real disconnection by Tube and Godot.
+		# WebRTC Connection can be temporary disconnected and will automaticaly reconnect quickly. But for godot, disconnected is putting a end to the connection. We don't want that so we tell godot that it is still connected. If does not reconnect, state will be FAILED and handle as real disconnection by Tube and Godot.
 		# It looks like when using reliable channel, while DISCONNECTED, message will be received on reconnection.
 		return WebRTCPeerConnection.STATE_CONNECTED
 	
@@ -188,6 +190,7 @@ func _set_local_description(p_type: String, p_sdp: String):
 	session_description_created.emit()
 	
 	if is_signaling_ready() and not is_attempting_connection():
+		match_remaining_ports()
 		signaling_readied.emit()
 	
 	return error
@@ -201,12 +204,29 @@ func _on_ice_candidate_created(p_media: String, p_index: int, p_sdp: String):
 	})
 	
 	var sdp_parsed := WebRTCSdp.new(p_sdp)
-	if sdp_parsed.type == "host" and sdp_parsed.protocol == "udp":
-		add_port_mapping(sdp_parsed.port)
+	
+	if "udp" == sdp_parsed.protocol:
+		if "host" == sdp_parsed.type:
+			if not local_ports.has(sdp_parsed.port):
+				local_ports.append(sdp_parsed.port)
+		
+		elif "srflx" == sdp_parsed.type:
+			if not mapped_ports.has(sdp_parsed.port):
+				if not pending_public_ports.has(sdp_parsed.port):
+					pending_public_ports.append(sdp_parsed.port)
+		
+			if sdp_parsed.related_port != 0:
+				mapped_ports[sdp_parsed.port] = sdp_parsed.related_port
+				port_mapped.emit(sdp_parsed.port, sdp_parsed.related_port)
+				pending_public_ports.erase(sdp_parsed.port)
+		
+		match_ports()
+	
 	
 	ice_candidate_created.emit()
 	
 	if is_signaling_ready() and not is_attempting_connection():
+		match_remaining_ports()
 		signaling_readied.emit()
 
 
@@ -258,41 +278,6 @@ func _close() -> void:
 	valid = false
 	if WebRTCPeerConnection.STATE_CLOSED != connection.get_connection_state():
 		connection.close()
-
-
-func _notification(what):
-	if what == NOTIFICATION_PREDELETE:
-		for thread in port_mapping_threads:
-			thread.wait_to_finish()
-
-
-
-#func is_server_compliant() -> bool: # must be signaling ready, NAT config
-	#
-	#var compliant_candidates := {}
-	#for ice_candidate in ice_candidates:
-		#var parsed := TubeClient._parse_ice_candidate_sdp(ice_candidate.sdp)
-		#
-		#if parsed.type != "srflx":
-			#continue
-		#
-		#var related_port = parsed.related_port
-		#var port = parsed.port
-		#if related_port == -1 or port == -1:
-			#continue
-		#
-		#if not compliant_candidates.has(related_port):
-			#compliant_candidates[related_port] = []
-		#
-		#compliant_candidates[related_port].append(
-			#port
-		#)
-#
-	#if compliant_candidates.size() == 1:
-		#var ports = compliant_candidates.values()[0]
-		#return ports.size() == 1
-	#
-	#return false
 
 
 func is_signaling_ready() -> bool:
@@ -360,61 +345,30 @@ func update_signaling_state() -> bool: #changed
 	return previous != signaling_state
 
 
-func add_port_mapping(p_port: int):
-	if OS.get_name() == "Web":
-		return
+func match_ports():
+	for port in pending_public_ports:
+		if local_ports.has(port):
+			mapped_ports[port] = port
+			port_mapped.emit(port, port)
 	
-	
-	var thread := Thread.new()
-	port_mapping_threads.append(thread)
-	thread.start(_add_port_mapping.bind(p_port))
+	for port in mapped_ports:
+		if pending_public_ports.has(port):
+			pending_public_ports.erase(port)
 
 
-func _add_port_mapping(p_port: int, protocol := "UDP"):
-	var upnp := UPNP.new()
-	var error := upnp.discover()
-	if error:
-		raise_warning.call_deferred(
-			"Cannot map port {port}, upnp discover error: {error}".format({
-			"port": p_port,
-			"error": error_string(error),
-		}))
-		return
-		
-	
-	var gateway := upnp.get_gateway()
-	if null == gateway:
-		raise_warning.call_deferred(
-			"Cannot map port {port} for peer {peer_id}, no gateway found".format({
-			"port": p_port,
-			"peer_id": id,
-		}))
+func match_remaining_ports():
+	match_ports()
+	if local_ports.is_empty():
 		return
 	
-	if not gateway.is_valid_gateway():
-		raise_warning.call_deferred(
-			"Cannot map port {port} for peer {peer_id}, gateway not valid".format({
-			"port": p_port,
-			"peer_id": id,
-		}))
-		return
+	var port := local_ports[0]
+	for i_port in pending_public_ports:
+		mapped_ports[i_port] = port
+		port_mapped.emit(i_port, port)
 	
-	var result := upnp.add_port_mapping(
-		p_port,
-		p_port,
-		"Tube", #ProjectSettings.get_setting("application/config/name"),
-		protocol
-	)
-	if result:
-		raise_warning.call_deferred(
-			"Cannot map port {port} for peer {peer_id}, error: {error}".format({
-			"port": p_port,
-			"peer_id": id,
-			"error": result,
-		}))
-		return
-	
-	port_mapped.emit.call_deferred(p_port) # in thread call
+	for i_port in mapped_ports:
+		if pending_public_ports.has(port):
+			pending_public_ports.erase(port)
 
 
 func _connected():
@@ -476,19 +430,8 @@ func _process(delta: float):
 	
 	if gathering_changed or signaling_changed:
 		if is_signaling_ready() and not is_attempting_connection():
+			match_remaining_ports()
 			signaling_readied.emit()
-	
-	
-	# Threads
-	var new_threads: Array[Thread] = []
-	for thread in port_mapping_threads:
-		if not thread.is_alive():
-			thread.wait_to_finish()
-			continue
-		
-		new_threads.append(thread)
-	
-	port_mapping_threads = new_threads
 	
 	
 	# Times

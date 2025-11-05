@@ -344,10 +344,11 @@ func _on_peer_channel_initiated(p_channel: WebRTCDataChannel):
 	update()
 
 
-func _on_peer_port_mapped(port: int):
+func _on_peer_port_mapped(public_port: int, local_port: int):
 	add_message_item_control(
-		"Port {port} mapped".format({
-			"port": port,
+		"Port {port} mapped to internal port {internal_port}".format({
+			"port": public_port,
+			"internal_port": local_port
 		})
 	)
 	update()

@@ -248,9 +248,10 @@ layout_mode = 2
 current_tab = 0
 tabs_visible = false
 
-[node name="ClientControl" parent="VBoxContainer/VSplitContainer/VSplitContainer/PanelContainer/VBoxContainer/TabContainer" instance=ExtResource("4_6ede3")]
+[node name="ClientControl" parent="VBoxContainer/VSplitContainer/VSplitContainer/PanelContainer/VBoxContainer/TabContainer" node_paths=PackedStringArray("inspector") instance=ExtResource("4_6ede3")]
 unique_name_in_owner = true
 layout_mode = 2
+inspector = NodePath("../../../../../../..")
 
 [node name="LocalSignalingControl" parent="VBoxContainer/VSplitContainer/VSplitContainer/PanelContainer/VBoxContainer/TabContainer" node_paths=PackedStringArray("messages_container") instance=ExtResource("5_v58fy")]
 unique_name_in_owner = true

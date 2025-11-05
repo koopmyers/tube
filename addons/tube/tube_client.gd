@@ -155,6 +155,7 @@ var refuse_new_connections: bool = false:
 var _local_signaling_peer: TubeLocalSignalingPeer
 var _trackers: Array[TubeTracker] = []
 var _peers: Dictionary[int, TubePeer] = {}
+var _upnp := TubeUPNP.new()
 
 
 func _raise_error(p_code: int, p_message: String):
@@ -321,6 +322,7 @@ func _terminate_signaling():
 
 func _terminate_session():
 	state = State.IDLE
+	_upnp.clear_port_mapping()
 	
 	if null != _local_signaling_peer:
 		_local_signaling_peer.close()
@@ -654,6 +656,9 @@ func _initiate_peer(p_peer_id: int) -> TubePeer:
 	peer.closed.connect(
 		_on_peer_closed.bind(peer)
 	)
+	peer.port_mapped.connect(
+		_upnp.add_port_mapping
+	)
 	
 	_peers[p_peer_id] = peer
 	_peer_initiated.emit(peer)
@@ -676,6 +681,9 @@ func _initiate_peer(p_peer_id: int) -> TubePeer:
 func _clean_peer(p_peer: TubePeer):
 	if multiplayer_peer.has_peer(p_peer.id):
 		multiplayer_peer.remove_peer(p_peer.id)
+	
+	for port in p_peer.mapped_ports:
+		_upnp.delete_port_mapping(port)
 	
 	#if _peers.has(p_peer.id): # garbage collected
 		#_peers.erase(p_peer.id)
@@ -754,6 +762,9 @@ func _on_peer_closed(p_peer: TubePeer):
 # PROCESS ###
 
 func _process(delta):
+	
+	if _upnp:
+		_upnp._process(delta)
 	
 	if _local_signaling_peer:
 		_local_signaling_peer._process(delta)
