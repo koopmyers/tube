@@ -33,9 +33,9 @@ Tube was developed and tested with Godot 4.5, and it may also work with other Go
 > [!WARNING]
 > No **specific** error message will appear if WebRTC implementation is missing. Make sure it’s set up correctly!
 
-When exporting to Android, make sure to enable the `INTERNET` permission in the Android export preset before exporting the project or using one-click deploy. Otherwise, network communication of any kind will be blocked by Android.
+When exporting to Android, make sure to enable the `INTERNET` and `CHANGE_WIFI_MULTICAST_STATE` permission in the Android export preset before exporting the project or using one-click deploy. Otherwise, network communication of any kind will be blocked by Android.
 
-To use this add-on effectively, it is essential to understand [Godot High-level multiplayer](https://docs.godotengine.org/en/stable/tutorials/networking/high_level_multiplayer.html)
+To use this add-on effectively, it is essential to understand [Godot High-Level Multiplayer](https://docs.godotengine.org/en/stable/tutorials/networking/high_level_multiplayer.html)
 
 ### Installation
 
@@ -67,8 +67,8 @@ For Web builds, however, steps 2 and 3 are mandatory, since local connections do
 
 3. Add `Stun Servers URLs`, you can use the following:
     - stun:stun.l.google.com:19302
-    - stun:stun1.l.google.com:19302
-    - stun:stun2.l.google.com:19302
+    - stun:stun.cloudflare.com:3478
+    - stun:stun.bethesda.net:3478
 
 
 #### 2. Adding a `TubeClient` to Your Scene
@@ -156,12 +156,47 @@ func transfer_some_input():
 
 To know more about how to configure and use it, you can look into the [demo project](https://github.com/koopmyers/pixelary)
 
-### Inspector
+### Trouble shooting
 
-**Tube** has a handy tool called `TubeInspector` to help you debug and see what’s happening under the hood.
-To use it, simply include the scene located at: `/addons/tube/tube_inspector.tscn` in your scene and assign  your TubeClient to it.
-> [!NOTE]
-> Some features, such as latency display and chat, are only available if the TubeInspector is part of the MultiplayerAPI scene tree.
+**Tube** includes a helpful tool called `TubeInspector` for debugging and visualizing internal network activity.  
+To use it, add the scene located at `/addons/tube/tube_inspector.tscn` to your project and assign your `TubeClient` to it.
+
+> [!NOTE]  
+> Some features, such as latency display and chat, are only available if `TubeInspector` is part of the `MultiplayerAPI` scene tree.
+
+<img src="https://raw.githubusercontent.com/koopmyers/tube/refs/heads/main/screenshots/inspector2.png" alt="Tube inspector" width="200"/>
+<img src="https://raw.githubusercontent.com/koopmyers/tube/b47f12c37505baa57a5c89281d6d2fd9263c3cd4/screenshots/inspector.png" alt="Tube inspector" width="200"/>
+
+#### Major known issues
+
+The most common reason a player cannot connect is a **symmetric NAT**.  
+A symmetric NAT is a router configuration that prevents NAT hole punching. This means that if both peers are behind a symmetric NAT, the connection will likely fail.
+
+You can check whether you are behind a symmetric NAT using the **NAT hole punching** field in `TubeInspector`. Multiple STUN servers with different addresses are required. If the result is `unknown`, try different STUN domains. This tool is not available on Web platform.
+You can also test here: [Symmetric NAT test](https://tomchen.github.io/symmetric-nat-test/), but note that false positives are common due to browser privacy behavior.
+
+Tube will attempt to map public ports via **UPnP**. Port mapping can help bypass symmetric NAT.  
+However, UPnP is not supported on all networks, commonly disabled on corporate, public, or VPN networks.
+You can verify UPnP support using the **UPnP port mapping** field in `TubeInspector`. Port mapping is not available on Web platform.
+If UPnP is available but connections still fail, the timeout may occur before the port opens. Try increasing the client's `peer_signaling_timeout` or `peer_signaling_max_attempts`.
+
+If both **NAT hole punching** and **UPnP port mapping** show `likely to fail` for two players, then a direct Internet connection is likely impossible without a relay server.  
+You can still use **Tube** with your own servers to ensure reliable connectivity.  See: [Using your own servers](#using-your-own-servers).
+
+#### Minor known issues
+
+> [!CAUTION]  
+> Class 'UPNPDeviceMiniUPNP' already exists
+
+This is a core Godot Engine issue caused by multithreading. There is currently no known way to fix or suppress it without modifying the engine itself.
+
+</br>
+
+> [!CAUTION]  
+> Invalid status code. Got 'XXX', expected 101.
+
+This refers to a [HTTP status code](https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Status#server_error_responses), indicating that a tracker is unavailable or encountered an issue. `TubeInspector` will show which trackers failed to connect.
+This problem is related to tracker availability or network conditions. There is no reliable way to handle this error in GDScript. Because public trackers can occasionally be unstable, we recommend using **multiple trackers** to improve connection reliability.
 
 ## How it works
 
