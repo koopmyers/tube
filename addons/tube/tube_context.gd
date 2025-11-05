@@ -43,6 +43,10 @@ func _to_string() -> String:
 
 ## Checks if the context configuration is valid.
 func is_valid() -> bool:
+	if 0 == session_id_characters_set.length():
+		printerr("Session ID Character Set is empty")
+		return false
+
 	for char_index in range(session_id_characters_set.length()):
 		if session_id_characters_set.unicode_at(char_index) >= 128:
 			printerr("Session ID Character Set can only contain ASCII characters")
