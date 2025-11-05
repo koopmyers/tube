@@ -41,18 +41,23 @@ func _to_string() -> String:
 	return "AppID: %s | Trackers: %s | STUN: %s" % [app_id, str(trackers_urls), str(stun_servers_urls)]
 
 
+func _is_ascii(string: String) -> bool:
+	for char_index in range(string.length()):
+		if string.unicode_at(char_index) >= 128:
+			return false
+	return true
+
 ## Checks if the context configuration is valid.
 func is_valid() -> bool:
 	if 0 == session_id_characters_set.length():
 		printerr("Session ID Character Set is empty")
 		return false
 
-	for char_index in range(session_id_characters_set.length()):
-		if session_id_characters_set.unicode_at(char_index) >= 128:
-			printerr("Session ID Character Set can only contain ASCII characters")
-			return false
+	if not _is_ascii(session_id_characters_set):
+		printerr("Session ID Character Set can only contain ASCII characters")
+		return false
 	
-	if null == app_id or 15 != app_id.length():
+	if null == app_id or 15 != app_id.length() or not _is_ascii(app_id):
 		printerr("App id is invalid")
 		return false
 	
