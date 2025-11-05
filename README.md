@@ -164,8 +164,9 @@ To use it, add the scene located at `/addons/tube/tube_inspector.tscn` to your p
 > [!NOTE]  
 > Some features, such as latency display and chat, are only available if `TubeInspector` is part of the `MultiplayerAPI` scene tree.
 
-<img src="https://raw.githubusercontent.com/koopmyers/tube/refs/heads/main/screenshots/inspector2.png" alt="Tube inspector" width="200"/>
-<img src="https://raw.githubusercontent.com/koopmyers/tube/b47f12c37505baa57a5c89281d6d2fd9263c3cd4/screenshots/inspector.png" alt="Tube inspector" width="200"/>
+<p align="middle">
+    <img src="https://raw.githubusercontent.com/koopmyers/tube/refs/heads/main/screenshots/inspector2.png" alt="Tube inspector" align="center" width="32%"/><img src="https://raw.githubusercontent.com/koopmyers/tube/b47f12c37505baa57a5c89281d6d2fd9263c3cd4/screenshots/inspector.png" alt="Tube inspector" align="center" width="32%"/>
+</p>
 
 #### Major known issues
 
@@ -189,8 +190,9 @@ You can still use **Tube** with your own servers to ensure reliable connectivity
 > Class 'UPNPDeviceMiniUPNP' already exists
 
 This is a core Godot Engine issue caused by multithreading. There is currently no known way to fix or suppress it without modifying the engine itself.
+It has no impact on the correct functioning of **Tube**.
 
-</br>
+---
 
 > [!CAUTION]  
 > Invalid status code. Got 'XXX', expected 101.
