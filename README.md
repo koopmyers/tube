@@ -15,7 +15,7 @@ Because no server is deployed by default, Tube may not be suitable for projects 
 As it is, Tube is a great option for:
 - Rapid prototyping of peer-to-peer multiplayer
 - Testing mutliplayer games
-- Learning Godot Hight-Level Multiplayer
+- Learning Godot High-level multiplayer
 - Local multiplayer game
 - Game demo
 - Simple indie game
@@ -35,7 +35,7 @@ Tube was developed and tested with Godot 4.5, and it may also work with other Go
 
 When exporting to Android, make sure to enable the `INTERNET` permission in the Android export preset before exporting the project or using one-click deploy. Otherwise, network communication of any kind will be blocked by Android.
 
-To use this add-on effectively, it is essential to understand [Godot Hight-Level Multiplayer](https://docs.godotengine.org/en/stable/tutorials/networking/high_level_multiplayer.html)
+To use this add-on effectively, it is essential to understand [Godot High-level multiplayer](https://docs.godotengine.org/en/stable/tutorials/networking/high_level_multiplayer.html)
 
 ### Installation
 
@@ -134,7 +134,7 @@ The server can:
 By default, `TubeClient` automatically configures Godot’s `MultiplayerAPI` and `MultiplayerPeer` on the SceneTree root node.
 You can customize this behavior by setting the multiplayer_root_node property on TubeClient (see [SceneTree.set_multiplayer](https://docs.godotengine.org/en/stable/classes/class_scenetree.html#class-scenetree-method-set-multiplayer) for more information).
 
-Once peers are connected, use [Godot Hight-Level](https://docs.godotengine.org/en/stable/tutorials/networking/high_level_multiplayer.html) to implement your game logic. 
+Once peers are connected, use [Godot High-level multiplayer](https://docs.godotengine.org/en/stable/tutorials/networking/high_level_multiplayer.html) to implement your game logic. 
 You can make use of tools such as:
 - Godot RPC
 - [MultiplayerSpawner](https://docs.godotengine.org/en/stable/classes/)
@@ -167,7 +167,7 @@ To use it, simply include the scene located at: `/addons/tube/tube_inspector.tsc
 
 **Tube** establishes a server–client architecture between peers.
 One peer acts as the server, while all other peers connect to it as clients.
-The server is responsible for relaying Godot’s RPC (see [Godot Hight-Level](https://docs.godotengine.org/en/stable/tutorials/networking/high_level_multiplayer.html)) between peers.
+The server is responsible for relaying Godot’s RPC (see [Godot High-level multiplayer](https://docs.godotengine.org/en/stable/tutorials/networking/high_level_multiplayer.html)) between peers.
 
 To connect peers to the server, Tube uses WebRTC (Web Real-Time Communication), an open-source technology that enables secure, real-time peer-to-peer data transmission.
 Establishing a WebRTC connection requires an initial signaling phase, which depends on three external components:
