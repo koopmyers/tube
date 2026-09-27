@@ -59,6 +59,9 @@ func raise_warning(message: String):
 
 func start_nat_hole_punching_detection(p_urls: Array[String]):
 	public_ports.clear()
+	if not TubeClient.is_webrtc_available():
+		raise_warning("WebRTC implementation is missing, install the webrtc-native GDExtension")
+		return
 	
 	if not peer.is_bound():
 		var error := peer.bind(_binding_port)

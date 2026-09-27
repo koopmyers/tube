@@ -93,6 +93,11 @@ enum SessionError {
 	## Signaling is composed of local and online signaling.  
 	SIGNALING_FAILED, 
 	
+	## Session local signaling failed. Meaning new players will not be able to join the via local network. The session is still considerated open as communication will connected peer is still possible.
+	## [br][br]
+	## if no internet signaling is setup in context, only local signaling is available (not available on Web platform), meaing if local signaling failed there is no other way for player to join the session. [signal error_raised] will be emitted once with [enum SessionError.LOCAL_SIGNALING_FAILED] and a second time with [enum SessionError.SIGNALING_FAILED].
+	LOCAL_SIGNALING_FAILED, 
+	
 	## Session online signaling failed, only for server. Meaning new players will not be able to join the via Internet session. The session is still considerated open as communication will connected peer is still possible.
 	## [br][br]
 	## Local signaling is not available on Web platform, meaing if online signaling failed on Web platform there is no other way for player to join the session. [signal error_raised] will be emitted once with [enum SessionError.ONLINE_SIGNALING_FAILED] and a second time with [enum SessionError.SIGNALING_FAILED].
@@ -156,6 +161,15 @@ var _local_signaling_peer: TubeLocalSignalingPeer
 var _trackers: Array[TubeTracker] = []
 var _peers: Dictionary[int, TubePeer] = {}
 var _upnp := TubeUPNP.new()
+var _multiplayer_root_node_path: NodePath
+
+static var _registered_multiplayer_roots: Dictionary = {}
+
+static func is_webrtc_available() -> bool:
+	if OS.has_feature("web"):
+		return true
+	
+	return WebRTCPeerConnection.new().get_class() != "WebRTCPeerConnectionExtension"
 
 
 func _raise_error(p_code: int, p_message: String):
@@ -164,11 +178,10 @@ func _raise_error(p_code: int, p_message: String):
 
 
 func _ready() -> void:
-	var node_path := NodePath()
 	if is_instance_valid(multiplayer_root_node):
-		node_path = multiplayer_root_node.get_path()
+		_multiplayer_root_node_path = multiplayer_root_node.get_path()
 	
-	get_tree().set_multiplayer(multiplayer_api, node_path)
+	get_tree().set_multiplayer(multiplayer_api, _multiplayer_root_node_path)
 	
 	if not multiplayer_api.peer_connected.is_connected(
 		peer_connected.emit
@@ -189,6 +202,16 @@ func create_session() -> void:
 	if not is_inside_tree():
 		_session_initiated.emit()
 		_raise_error(SessionError.CREATE_SESSION_FAILED, "Session creation failed, client is not inside tree")
+		return
+	
+	if not is_webrtc_available():
+		_session_initiated.emit()
+		_raise_error(SessionError.CREATE_SESSION_FAILED, "Session creation failed, WebRTC implementation missing, install the webrtc-native GDExtension")
+		return
+	
+	if get_tree().get_multiplayer(_multiplayer_root_node_path) != multiplayer_api:
+		_raise_error(SessionError.CREATE_SESSION_FAILED, "Session creation failed, multiplayer_root_nodemupliplayer api has be replaced")
+		_session_initiated.emit()
 		return
 	
 	if State.IDLE != state:
@@ -226,6 +249,11 @@ func create_session() -> void:
 	for url in context.trackers_urls:
 		_initiate_tracker(url)
 	
+	if not _is_local_signaling() and not _is_online_signaling():
+		_terminate_session()
+		_raise_error(SessionError.CREATE_SESSION_FAILED, "Session creation failed, not signaling")
+		return
+	
 	if _is_local_signaling() and not _is_online_signaling():
 		state = State.SESSION_CREATED
 		session_created.emit()
@@ -236,6 +264,16 @@ func join_session(p_session_id: String) -> void:
 	if not is_inside_tree():
 		_session_initiated.emit()
 		_raise_error(SessionError.JOIN_SESSION_FAILED, "Joining session failed, client is not inside tree")
+		return
+	
+	if not is_webrtc_available():
+		_session_initiated.emit()
+		_raise_error(SessionError.JOIN_SESSION_FAILED, "Joining session failed, WebRTC implementation missing, install the webrtc-native GDExtension")
+		return
+	
+	if get_tree().get_multiplayer(_multiplayer_root_node_path) != multiplayer_api:
+		_raise_error(SessionError.JOIN_SESSION_FAILED, "Joining session failed, multiplayer_root_nodemupliplayer api has be replaced")
+		_session_initiated.emit()
 		return
 	
 	if State.IDLE != state:
@@ -282,6 +320,11 @@ func join_session(p_session_id: String) -> void:
 	_initiate_local_signaling()
 	for url in context.trackers_urls:
 		_initiate_tracker(url)
+	
+	if not _is_local_signaling() and not _is_online_signaling():
+		_terminate_session()
+		_raise_error(SessionError.JOIN_SESSION_FAILED, "Joining session failed, not signaling")
+		return
 
 ## Attempts to remove a peer [param p_peer_id from the session. 
 ## Emits [signal peer_disconnected] if successful [signal error_raised] with [code]SessionError.KICK_PEER_FAILED[/code] if the operation fails.
@@ -362,14 +405,19 @@ func _initiate_local_signaling() -> void:
 		session_id,
 		peer_id
 	)
+	if error:
+		_local_signaling_peer = null
+		_raise_error(SessionError.LOCAL_SIGNALING_FAILED, "Local signaling failed, cannot bind: {error}".format({
+			"error": error_string(error),
+		}))
+		
+		if not _is_online_signaling():
+			_raise_error(SessionError.SIGNALING_FAILED, "Signaling failed")
+		return
+	
 	_local_signaling_peer_initiated.emit(
 		_local_signaling_peer
 	)
-	
-	if error:
-		_local_signaling_peer = null
-		return
-	
 	_local_signaling_peer.received_signaling_data.connect(
 		_handle_local_signaling_data
 	)
@@ -426,6 +474,10 @@ func _all_trackers_disconnected(): # is_online_signaling false
 			return
 		
 		_raise_error(
+			SessionError.SIGNALING_FAILED,
+			"Signaling failed, local and online signaling failed"
+		)
+		_raise_error(
 			SessionError.CREATE_SESSION_FAILED,
 			"Session creation failed, cannot connect to any tracker"
 		)
@@ -439,7 +491,7 @@ func _all_trackers_disconnected(): # is_online_signaling false
 		
 		if not _is_local_signaling():
 			_raise_error(
-				SessionError.ONLINE_SIGNALING_FAILED,
+				SessionError.SIGNALING_FAILED,
 				"Signaling failed, lost all trackers connections"
 			)
 		

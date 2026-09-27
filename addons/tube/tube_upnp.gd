@@ -14,7 +14,7 @@ var mapped_ports: Dictionary[int, int] = {}
 var mapped_times: Dictionary[int, float] = {}
 
 var task_ids: Array[int] = []
-var upnp := UPNP.new()
+var upnp: UPNP
 
 var is_port_mapping_ready := false
 var mutex := Mutex.new()
@@ -30,6 +30,7 @@ func _init() -> void:
 	if OS.get_name() == "Web":
 		return
 	
+	upnp = UPNP.new()
 	port_mapping_ready.connect(_on_port_mapping_ready)
 	task_ids.append(WorkerThreadPool.add_task(_upnp_init_task))
 
@@ -196,6 +197,9 @@ func clear_port_mapping() -> void:
 
 func _notification(what):
 	if what == NOTIFICATION_PREDELETE:
+		if not is_instance_valid(self):
+			return
+		
 		for port in mapped_ports:
 			delete_port_mapping(port)
 	
