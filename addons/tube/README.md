@@ -11,7 +11,8 @@ It also runs on non-web platforms (Windows, macOS, Linux, Android, iOS) over a l
 
 However, the benefit of not having to deploy a server comes with a trade-off: in some cases, two peers may fail to connect. To better understand why this happens, see [How it works](#how-it-works).
 
-Because no server is deployed by default, Tube may not be suitable for projects that require high stability or support for a large user base. If stability is critical, you can deploy your own servers to ensure reliable connectivity [Using your own servers](#using-your-own-servers). 
+Because no server is deployed by default, Tube may not be suitable for projects that require high stability or support for a large user base. If stability is critical, you can deploy your own servers to ensure reliable connectivity [Using your own servers](#using-your-own-servers).
+
 As it is, Tube is a great option for:
 - Rapid prototyping of peer-to-peer multiplayer
 - Testing mutliplayer games
@@ -23,15 +24,13 @@ As it is, Tube is a great option for:
 
 There’s no strict technical limit on the number of players in a session, but each additional player increases the load on the server peer.
 
-Tube was developed and tested with Godot 4.5, and it may also work with other Godot 4.x versions. It is not compatible with Godot 3.
+Tube was developed and tested with Godot 4.7.2, and it may also work with other Godot 4.x versions. It is not compatible with Godot 3.
 
 ## How to use
 
 ### Requirements
 
 **Tube** uses WebRTC, as it, it works automatically on HTML5 export, but require an external GDExtension plugin on other platforms. You can find everything you need in the [webrtc-native plugin repository](https://github.com/godotengine/webrtc-native/releases).
-> [!WARNING]
-> No **specific** error message will appear if WebRTC implementation is missing. Make sure it’s set up correctly!
 
 When exporting to Android, make sure to enable the `INTERNET` and `CHANGE_WIFI_MULTICAST_STATE` permission in the Android export preset before exporting the project or using one-click deploy. Otherwise, network communication of any kind will be blocked by Android.
 
@@ -47,28 +46,29 @@ Verify that the addon is activated in your godot project in `Project Settings ->
 ### Configuration & Utilisation
 
 **Tube** is composed of two main elements:
+
 - `TubeContext`: A `Resource` defining the configuration the session connexions.
 - `TubeClient`: A `Node` managing network connection and multiplayer peers.
 
 #### 1. Creating a `TubeContext`
 
 First, create a new `TubeContext` for your project `in Godot FileSystem inspector -> Create New -> TubeContext`. And do the following :
+
 1. Enter a `App ID` in your `TubeContext`. App ID must be exactly 15 ASCII characters. You can generate one automatically by clicking `Generate App ID`. App ID must be the same on all instance of your game.
 
 > [!TIP]
 > If your game is only intended for local play, you can skip the following steps 2 and 3.
-For Web builds, however, steps 2 and 3 are mandatory, since local connections do not work on Web.
+> For Web builds, however, steps 2 and 3 are mandatory, since local connections do not work on Web.
 
-2. Add `Trackers URLs` , you can use the following:
+2. Add `Trackers URLs`, you can use the following:
+    - wss://tracker.webtorrent.dev
+    - wss://open.ftorrent.com
     - wss://tracker.openwebtorrent.com
-    - wss://tracker.files.fm:7073/announce
-    - wss://tracker.btorrent.xyz/
-    - wss://tracker.ghostchu-services.top:443/announce
+    - wss://tracker.androodev.com
 
 3. Add `Stun Servers URLs`, you can use the following:
     - stun:stun.l.google.com:19302
     - stun:stun.cloudflare.com:3478
-    - stun:stun.bethesda.net:3478
 
 
 #### 2. Adding a `TubeClient` to Your Scene
@@ -77,15 +77,17 @@ Next add a `TubeClient` to our game scene : `in Godot Scene inspector -> Add Chi
 
 > [!IMPORTANT]
 > `TubeClient` must be present in the scene tree to function, and it can be placed anywhere.
-However, it should not be removed while a session is open (either, creating, joining, created or joined).
+> However, it should not be removed while a session is open (either, creating, joining, created or joined).
 
 Assign the previously created TubeContext to the Context property of your TubeClient.
 Optionally, you can also configure:
+
 - `peer_signaling_timeout`
 - `peer_signaling_max_attempts`
 - `multiplayer_root_node`
 
 For more details about the available properties and functions:
+
 - In Godot Scene inspector -> Right click on your `TubeClient` -> `Open Documentation`.
 - In the Script tab, search for `TubeClient` in the Help panel.
 
@@ -93,6 +95,7 @@ For more details about the available properties and functions:
 #### 3. Creating and Joining Sessions
 
 On only one instance of the game call `create_session()`, for example:
+
 ```GDScript
 @onready var label: Label = $Label # Label to display session id
 @onready var tube_client: TubeClient = $TubeClient # reference to tube client in scene tree
@@ -114,6 +117,7 @@ func _on_button_pressed(): # User press join session button
 ```
 
 When the session is successfully created or joined, the corresponding signals are emitted:
+
 - `session_created`
 - `session_joined`
 
@@ -125,9 +129,9 @@ Any player can leave the session by calling `leave_session()`.
 If the server calls it, the session will close for everyone, and `session_left` will be emitted.
 
 The server can:
+
 - Kick a player using `kick_peer(p_peer_id: int)`
 - Refuse new connections automatically by setting `refuse_new_connections = true`
-
 
 #### 4. Implementing Multiplayer Logic
 
@@ -136,11 +140,13 @@ You can customize this behavior by setting the multiplayer_root_node property on
 
 Once peers are connected, use [Godot High-level multiplayer](https://docs.godotengine.org/en/stable/tutorials/networking/high_level_multiplayer.html) to implement your game logic. 
 You can make use of tools such as:
+
 - Godot RPC
 - [MultiplayerSpawner](https://docs.godotengine.org/en/stable/classes/)
 - [MultiplayerSynchronizer](https://docs.godotengine.org/en/stable/classes/class_multiplayersynchronizer.html)
 
 For exemple:
+
 ```GDScript
 func _on_some_input(): # Connected to some input.
     transfer_some_input.rpc_id(1) # Send the input only to the server.
@@ -164,8 +170,9 @@ To use it, add the scene located at `/addons/tube/tube_inspector.tscn` to your p
 > [!NOTE]  
 > Some features, such as latency display and chat, are only available if `TubeInspector` is part of the `MultiplayerAPI` scene tree.
 
-<img src="https://raw.githubusercontent.com/koopmyers/tube/refs/heads/main/screenshots/inspector2.png" alt="Tube inspector" width="200"/>
-<img src="https://raw.githubusercontent.com/koopmyers/tube/b47f12c37505baa57a5c89281d6d2fd9263c3cd4/screenshots/inspector.png" alt="Tube inspector" width="200"/>
+<p align="middle">
+    <img src="https://raw.githubusercontent.com/koopmyers/tube/refs/heads/main/screenshots/inspector2.png" alt="Tube inspector" align="center" width="32%"/><img src="https://raw.githubusercontent.com/koopmyers/tube/b47f12c37505baa57a5c89281d6d2fd9263c3cd4/screenshots/inspector.png" alt="Tube inspector" align="center" width="32%"/>
+</p>
 
 #### Major known issues
 
@@ -189,8 +196,9 @@ You can still use **Tube** with your own servers to ensure reliable connectivity
 > Class 'UPNPDeviceMiniUPNP' already exists
 
 This is a core Godot Engine issue caused by multithreading. There is currently no known way to fix or suppress it without modifying the engine itself.
+It has no impact on the correct functioning of **Tube**.
 
-</br>
+---
 
 > [!CAUTION]  
 > Invalid status code. Got 'XXX', expected 101.
